@@ -1,8 +1,18 @@
-export const renderInfo = () =>
+import {monthNames} from '../helpers';
+
+export const renderInfo = (eventsArray) =>
   `<div class="trip-info__main">
       <h1 class="trip-info__title">
-          Amsterdam &mdash; ... &mdash; Amsterdam
-      </h1>
+          ${eventsArray[0].city} &mdash;
+          ${eventsArray.length < 3 ? `` : `
+            ${eventsArray.length === 3 ? `${eventsArray[1].city}` : `...`}  &mdash;
+          `}
+          ${eventsArray[eventsArray.length - 1].city}
+      </h1 >
 
-      <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;21</p>
-  </div>`;
+    <p class="trip-info__dates">
+      ${monthNames[new Date(eventsArray[0].date).getMonth()].substr(0, 3)}
+      ${new Date(eventsArray[0].date).getDate()}&nbsp;&mdash;&nbsp;${monthNames[new Date(eventsArray[eventsArray.length - 1].date).getMonth()].substr(0, 3)}
+      ${new Date(eventsArray[eventsArray.length - 1].date).getDate()}
+    </p>
+  </div > `;
