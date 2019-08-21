@@ -1,48 +1,37 @@
+const EVENTS_COUNT = 4;
+const MINUTES_FACTOR = 1000 * 60 * 60;
+/**
+ * Исходные данные
+ */
+const dataObj = {
+  type: new Set([`bus`, `check-in`, `drive`, `flight`, `restaurant`, `ship`, `sightseeing`, `taxi`, `train`, `transport`, `trip`]),
+  title: [`airport`, `Geneva`, `Chamonix`, `hotel`, `Natural History Museum`],
+  city: new Set([`Moscow`, `Paris`, `London`, `Los-Angeles`, `Murmansk`, `Lisbon`, `New York`]),
+  photo: `http://picsum.photos/300/150`,
+  description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`,
+  date: Date.now(),
+  price: 200,
+  offers: [`Add luggage`, `Switch to comfort class`, `Add meal`, `Choose seats`, `Travel by train`]
+};
+
+// Немного рандомных данных
 const getTripPoint = () => ({
-  type: Array.from(new Set([`bus`, `check-in`, `drive`, `flight`, `restaurant`, `ship`, `sightseeing`, `taxi`, `train`, `transport`, `trip`]))[Math.floor(Math.random() * 11)],
-  title: [`airport`, `Geneva`, `Chamonix`, `hotel`, `Natural History Museum`][Math.floor(Math.random() * 5)],
-  city: Array.from(new Set([`Moscow`, `Paris`, `London`, `Los-Angeles`, `Murmansk`, `Lisbon`, `New York`]))[Math.floor(Math.random() * 7)],
-  photos: new Array(Math.floor(Math.random() * 6) + 1).fill(`http://picsum.photos/300/150?random=${Math.floor(Math.random() * 10)}`),
-  description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus`
-    .split(`. `)
-    .sort(() => Math.random() - 0.5)
-    .slice(11 - Math.floor(Math.random() * 3) - 1)
-    .join(`. `),
-  date: Date.now() + Math.floor(Math.random() * 31) * 1000 * 60 * 60 * 24 +
-    Math.floor(Math.random() * 24) * 1000 * 60 * 60,
-  price: Math.floor(Math.random() * 190 + 10),
-  offers: [
-    {
-      title: `Add luggage`,
-      price: Math.floor(Math.random() * 8 + 1) * 5,
-      checked: false,
-    },
-    {
-      title: `Switch to comfort class`,
-      price: Math.floor(Math.random() * 8 + 1) * 5,
-      checked: false,
-    },
-    {
-      title: `Add meal`,
-      price: Math.floor(Math.random() * 8 + 1) * 5,
-      checked: Boolean(Math.round(Math.random())),
-    },
-    {
-      title: `Choose seats`,
-      price: Math.floor(Math.random() * 8 + 1) * 5,
-      checked: false,
-    },
-    {
-      title: `Travel by train`,
-      price: Math.floor(Math.random() * 8 + 1) * 5,
-      checked: Boolean(Math.round(Math.random())),
-    }
-  ]
-    .sort(() => Math.random() - 0.5)
-  // .slice(5 - Math.floor(Math.random() * 3))
+  type: getRandomItem(Array.from(dataObj.type)),
+  title: getRandomItem(dataObj.title),
+  city: getRandomItem(Array.from(dataObj.city)),
+  photos: new Array(getRandomInt(6) + 1).fill(`${dataObj.photo}?random=${getRandomInt(10)}`),
+  description: dataObj.description.split(`. `).sort(sortCb)
+    .slice(dataObj.description.length - Math.floor(Math.random() * 3) - 1).join(`. `),
+  date: dataObj.date + getRandomInt(31) * MINUTES_FACTOR * 24 + getRandomInt(24) * MINUTES_FACTOR,
+  price: getRandomPrice(dataObj.price),
+  offers: dataObj.offers.map((item) => ({
+    title: item,
+    price: getRandomOffersPrice(),
+    checked: getRandomBool()
+  })).sort(sortCb)
 });
 
-const EVENTS_COUNT = 4;
+
 export const eventsArray = new Array(EVENTS_COUNT).fill(``).map(getTripPoint).sort((a, b) => {
   return a.date - b.date;
 });
@@ -87,3 +76,29 @@ export const sortArr = [
     checked: false,
   }
 ];
+
+
+// разные мелкие вспомагательные функции
+function getRandomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function getRandomPrice(limit) {
+  return Math.floor(Math.random() * (limit - 10) + 10);
+}
+
+function getRandomInt(int) {
+  return Math.floor(Math.random() * int);
+}
+
+function getRandomBool() {
+  return Boolean(Math.round(Math.random()));
+}
+
+function getRandomOffersPrice() {
+  return Math.floor(Math.random() * 8 + 1) * 5;
+}
+
+function sortCb() {
+  return Math.random() - 0.5;
+}

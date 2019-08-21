@@ -11,3 +11,13 @@ export const renderComponent = (container, layoutText, position = `beforeend`) =
 
 
 export const monthNames = [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`];
+
+/**
+ * Получить строку месяца
+ *
+ * @param {Date} date Объект даты
+ * @return {String} Первые три буквы названия месяца
+ */
+export const getMonthName = (date) => {
+  return monthNames[date.getMonth()].toUpperCase().substr(0, 3);
+};

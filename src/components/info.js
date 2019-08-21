@@ -1,4 +1,4 @@
-import {monthNames} from '../helpers';
+import {getMonthName} from '../helpers';
 
 export const renderInfo = (eventsArray) =>
   `<div class="trip-info__main">
@@ -11,8 +11,8 @@ export const renderInfo = (eventsArray) =>
       </h1 >
 
     <p class="trip-info__dates">
-      ${monthNames[new Date(eventsArray[0].date).getMonth()].substr(0, 3)}
-      ${new Date(eventsArray[0].date).getDate()}&nbsp;&mdash;&nbsp;${monthNames[new Date(eventsArray[eventsArray.length - 1].date).getMonth()].substr(0, 3)}
+      ${getMonthName(new Date(eventsArray[0].date))}
+      ${new Date(eventsArray[0].date).getDate()}&nbsp;&mdash;&nbsp;${getMonthName(new Date(eventsArray[eventsArray.length - 1].date))}
       ${new Date(eventsArray[eventsArray.length - 1].date).getDate()}
     </p>
   </div > `;
