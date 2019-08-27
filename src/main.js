@@ -1,25 +1,30 @@
-import {renderComponent} from './helpers';
-import {renderInfo} from "./components/info";
-import {renderControls} from "./components/controls";
-import {renderEventsFilter} from "./components/eventsFilter";
-import {renderSort} from "./components/sort";
-import {renderEditEvent} from "./components/editEvent";
-import {renderDay} from "./components/day";
-import {renderEvent} from "./components/event";
+import {render} from './utils';
+import Info from "./components/info";
+import Controls from "./components/controls";
+import EventsFilter from "./components/eventsFilter";
+import Sort from "./components/sort";
+import EditEvent from "./components/editEvent";
+import Day from "./components/day";
+import Event from "./components/event";
 import {renderDaysList} from "./components/daysList";
 import {eventsArray, eventsFiltersArray, controlsArr, sortArr} from "./data";
 
 const tripInfo = document.querySelector(`.trip-info`);
-renderComponent(tripInfo, renderInfo(eventsArray), `afterbegin`);
+const info = new Info(eventsArray);
+render(tripInfo, info.getElement(), `afterbegin`);
+
 
 const tripControls = document.querySelector(`.trip-controls`);
-renderComponent(tripControls, renderControls(controlsArr));
-renderComponent(tripControls, renderEventsFilter(eventsFiltersArray));
+const controls = new Controls(controlsArr);
+render(tripControls, controls.getElement());
+const eventsFilter = new EventsFilter(eventsFiltersArray);
+render(tripControls, eventsFilter.getElement());
 
 const tripEvents = document.querySelector(`.trip-events`);
-renderComponent(tripEvents, renderSort(sortArr));
+const sort = new Sort(sortArr);
+render(tripEvents, sort.getElement());
 
-renderComponent(tripEvents, renderDaysList());
+tripEvents.insertAdjacentHTML(`beforeend`, renderDaysList());
 
 renderAllEvents();
 
@@ -45,20 +50,24 @@ function renderAllEvents() {
   let day = null;
   let month = null;
   let eventsList = null;
+
   eventsArray.forEach((event, index) => {
     const eventDay = new Date(event.date).getDate();
     const eventMonth = new Date(event.date).getMonth();
     if (eventDay !== day || eventMonth !== month) {
-      renderComponent(tripDays, renderDay(event, index + 1));
+      const dayInstance = new Day(event, index + 1);
+      render(tripDays, dayInstance.getElement());
       eventsList = Array.from(document.querySelectorAll(`.trip-events__list`));
       day = eventDay;
       month = eventMonth;
     }
 
     if (index === 0) {
-      renderComponent(eventsList[eventsList.length - 1], renderEditEvent(event));
+      const editEvent = new EditEvent(event);
+      render(eventsList[eventsList.length - 1], editEvent.getElement());
     } else {
-      renderComponent(eventsList[eventsList.length - 1], renderEvent(event));
+      const eventInstance = new Event(event);
+      render(eventsList[eventsList.length - 1], eventInstance.getElement());
     }
   });
 }

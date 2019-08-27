@@ -1,18 +1,44 @@
-import {getMonthName} from '../helpers';
+import {createElement, getMonthName} from '../utils';
 
-export const renderInfo = (eventsArray) =>
-  `<div class="trip-info__main">
-      <h1 class="trip-info__title">
-          ${eventsArray[0].city} &mdash;
-          ${eventsArray.length < 3 ? `` : `
-            ${eventsArray.length === 3 ? `${eventsArray[1].city}` : `...`}  &mdash;
+class Info {
+  constructor(eventsArray) {
+    this._elem = null;
+    this._eventsArray = eventsArray;
+  }
+
+  getElement() {
+    if (!this._elem) {
+      this._elem = createElement(this.getTemplate());
+    }
+
+    return this._elem;
+  }
+
+  removeElement() {
+    if (this._elem) {
+      this._elem = null;
+    }
+  }
+
+  getTemplate() {
+    return `
+      <div class="trip-info__main">
+        <h1 class="trip-info__title">
+          ${this._eventsArray[0].city} &mdash;
+          ${this._eventsArray.length < 3 ? `` : `
+            ${this._eventsArray.length === 3 ? `${this._eventsArray[1].city}` : `...`}  &mdash;
           `}
-          ${eventsArray[eventsArray.length - 1].city}
-      </h1 >
+          ${this._eventsArray[this._eventsArray.length - 1].city}
+        </h1 >
 
-    <p class="trip-info__dates">
-      ${getMonthName(new Date(eventsArray[0].date))}
-      ${new Date(eventsArray[0].date).getDate()}&nbsp;&mdash;&nbsp;${getMonthName(new Date(eventsArray[eventsArray.length - 1].date))}
-      ${new Date(eventsArray[eventsArray.length - 1].date).getDate()}
-    </p>
-  </div > `;
+        <p class="trip-info__dates">
+          ${getMonthName(new Date(this._eventsArray[0].date))}
+          ${new Date(this._eventsArray[0].date).getDate()}&nbsp;&mdash;&nbsp;${getMonthName(new Date(this._eventsArray[this._eventsArray.length - 1].date))}
+          ${new Date(this._eventsArray[this._eventsArray.length - 1].date).getDate()}
+        </p>
+      </div >
+    `;
+  }
+}
+
+export default Info;
