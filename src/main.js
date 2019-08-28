@@ -1,31 +1,32 @@
-import {renderComponent} from './helpers';
-import {renderInfo} from "./components/info";
-import {renderControls} from "./components/controls";
-import {renderEventsFilter} from "./components/eventsFilter";
-import {renderSort} from "./components/sort";
-import {renderEditEvent} from "./components/editEvent";
-import {renderDay} from "./components/day";
-import {renderEvent} from "./components/event";
+import {render} from './utils';
+import Info from "./components/info";
+import Controls from "./components/controls";
+import EventsFilter from "./components/eventsFilter";
+import Sort from "./components/sort";
+import EditEvent from "./components/editEvent";
+import Day from "./components/day";
+import Event from "./components/event";
 import {renderDaysList} from "./components/daysList";
 import {eventsArray, eventsFiltersArray, controlsArr, sortArr} from "./data";
 
 const tripInfo = document.querySelector(`.trip-info`);
-renderComponent(tripInfo, renderInfo(eventsArray), `afterbegin`);
+const info = new Info(eventsArray);
+render(tripInfo, info.getElement(), `afterbegin`);
+
 
 const tripControls = document.querySelector(`.trip-controls`);
-renderComponent(tripControls, renderControls(controlsArr));
-renderComponent(tripControls, renderEventsFilter(eventsFiltersArray));
+const controls = new Controls(controlsArr);
+render(tripControls, controls.getElement());
+const eventsFilter = new EventsFilter(eventsFiltersArray);
+render(tripControls, eventsFilter.getElement());
 
 const tripEvents = document.querySelector(`.trip-events`);
-renderComponent(tripEvents, renderSort(sortArr));
+const sort = new Sort(sortArr);
+render(tripEvents, sort.getElement());
 
-renderComponent(tripEvents, renderDaysList());
+tripEvents.insertAdjacentHTML(`beforeend`, renderDaysList());
 
-renderAllEvents();
-
-document.querySelector(`.trip-info__cost-value`).innerHTML = countTotalPrice(eventsArray);
-
-function countTotalPrice(events) {
+const countTotalPrice = (events) => {
   let price = 0;
   events.forEach((event) => {
     price += event.price;
@@ -38,27 +39,69 @@ function countTotalPrice(events) {
   });
 
   return price;
-}
+};
 
-function renderAllEvents() {
+document.querySelector(`.trip-info__cost-value`).innerHTML = countTotalPrice(eventsArray);
+
+const renderAllEvents = () => {
   const tripDays = document.querySelector(`.trip-days`);
   let day = null;
   let month = null;
   let eventsList = null;
+
   eventsArray.forEach((event, index) => {
     const eventDay = new Date(event.date).getDate();
     const eventMonth = new Date(event.date).getMonth();
     if (eventDay !== day || eventMonth !== month) {
-      renderComponent(tripDays, renderDay(event, index + 1));
+      const dayInstance = new Day(event, index + 1);
+      render(tripDays, dayInstance.getElement());
       eventsList = Array.from(document.querySelectorAll(`.trip-events__list`));
       day = eventDay;
       month = eventMonth;
     }
 
-    if (index === 0) {
-      renderComponent(eventsList[eventsList.length - 1], renderEditEvent(event));
-    } else {
-      renderComponent(eventsList[eventsList.length - 1], renderEvent(event));
-    }
+
+    const editEvent = new EditEvent(event);
+    const editEventElement = editEvent.getElement();
+    const eventContainer = eventsList[eventsList.length - 1];
+    const eventInstance = new Event(event);
+    const eventElement = eventInstance.getElement();
+    render(eventContainer, eventElement);
+
+    const onEscKeyDown = (e) => {
+      if (e.keyCode === 27) {
+        eventContainer.replaceChild(eventElement, editEventElement);
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
+    eventElement.querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, () => {
+        eventContainer.replaceChild(editEventElement, eventElement);
+        document.addEventListener(`keydown`, onEscKeyDown);
+      });
+
+    Array.from(editEventElement.querySelectorAll(`input[type="text"]`)).forEach((input) => {
+      input.addEventListener(`focus`, () => {
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      });
+
+      input.addEventListener(`blur`, () => {
+        document.addEventListener(`keydown`, onEscKeyDown);
+      });
+    });
+
+    editEventElement.querySelector(`form`)
+      .addEventListener(`submit`, (e) => {
+        e.preventDefault();
+        eventContainer.replaceChild(eventElement, editEventElement);
+      });
+
+    editEventElement.querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, () => {
+        eventContainer.replaceChild(eventElement, editEventElement);
+      });
   });
-}
+};
+
+renderAllEvents();
