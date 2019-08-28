@@ -26,11 +26,7 @@ render(tripEvents, sort.getElement());
 
 tripEvents.insertAdjacentHTML(`beforeend`, renderDaysList());
 
-renderAllEvents();
-
-document.querySelector(`.trip-info__cost-value`).innerHTML = countTotalPrice(eventsArray);
-
-function countTotalPrice(events) {
+const countTotalPrice = (events) => {
   let price = 0;
   events.forEach((event) => {
     price += event.price;
@@ -43,9 +39,11 @@ function countTotalPrice(events) {
   });
 
   return price;
-}
+};
 
-function renderAllEvents() {
+document.querySelector(`.trip-info__cost-value`).innerHTML = countTotalPrice(eventsArray);
+
+const renderAllEvents = () => {
   const tripDays = document.querySelector(`.trip-days`);
   let day = null;
   let month = null;
@@ -62,12 +60,48 @@ function renderAllEvents() {
       month = eventMonth;
     }
 
-    if (index === 0) {
-      const editEvent = new EditEvent(event);
-      render(eventsList[eventsList.length - 1], editEvent.getElement());
-    } else {
-      const eventInstance = new Event(event);
-      render(eventsList[eventsList.length - 1], eventInstance.getElement());
-    }
+
+    const editEvent = new EditEvent(event);
+    const editEventElement = editEvent.getElement();
+    const eventContainer = eventsList[eventsList.length - 1];
+    const eventInstance = new Event(event);
+    const eventElement = eventInstance.getElement();
+    render(eventContainer, eventElement);
+
+    const onEscKeyDown = (e) => {
+      if (e.keyCode === 27) {
+        eventContainer.replaceChild(eventElement, editEventElement);
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
+    eventElement.querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, () => {
+        eventContainer.replaceChild(editEventElement, eventElement);
+        document.addEventListener(`keydown`, onEscKeyDown);
+      });
+
+    Array.from(editEventElement.querySelectorAll(`input[type="text"]`)).forEach((input) => {
+      input.addEventListener(`focus`, () => {
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      });
+
+      input.addEventListener(`blur`, () => {
+        document.addEventListener(`keydown`, onEscKeyDown);
+      });
+    });
+
+    editEventElement.querySelector(`form`)
+      .addEventListener(`submit`, (e) => {
+        e.preventDefault();
+        eventContainer.replaceChild(eventElement, editEventElement);
+      });
+
+    editEventElement.querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, () => {
+        eventContainer.replaceChild(eventElement, editEventElement);
+      });
   });
-}
+};
+
+renderAllEvents();

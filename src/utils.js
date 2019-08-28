@@ -4,7 +4,6 @@ const Position = {
 };
 
 export const render = (container, elem, position = `beforeend`) => {
-  console.log(elem);
   switch (position) {
     case Position.AFTERBEGIN: {
       container.prepend(elem);

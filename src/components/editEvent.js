@@ -1,7 +1,7 @@
-import { createElement } from '../utils';
+import {createElement} from '../utils';
 
 class EditEvent {
-  constructor({ type, date, city, photos, description, price, offers }) {
+  constructor({type, date, city, photos, description, price, offers}) {
     this._elem = null;
     this._type = type;
     this._date = new Date(date);
