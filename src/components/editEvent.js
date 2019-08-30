@@ -169,11 +169,9 @@ class EditEvent {
                     <label class="event__offer-label" for="event-offer-${index}">
                       <span class="event__offer-title">${offer.title}</span>
                       &plus;
-                      &euro;&nbsp;<span class="event__offer-price">30</span>
-                    </label>
-                  </div>
-                `).join(``)}
-
+                      &euro;&nbsp;<span class="event__offer-price">${offer.price}</span >
+                    </label >
+                  </div >`).join(``)}
               </div>
             </section>
 
