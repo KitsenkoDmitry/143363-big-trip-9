@@ -6,25 +6,21 @@ import Sort from "./components/sort";
 import EditEvent from "./components/editEvent";
 import Day from "./components/day";
 import Event from "./components/event";
-import {renderDaysList} from "./components/daysList";
+import DaysList from "./components/daysList";
 import {eventsArray, eventsFiltersArray, controlsArr, sortArr} from "./data";
-
-const tripInfo = document.querySelector(`.trip-info`);
-const info = new Info(eventsArray);
-render(tripInfo, info.getElement(), `afterbegin`);
-
+import Message from './components/message';
 
 const tripControls = document.querySelector(`.trip-controls`);
 const controls = new Controls(controlsArr);
-render(tripControls, controls.getElement());
 const eventsFilter = new EventsFilter(eventsFiltersArray);
+render(tripControls, controls.getElement());
 render(tripControls, eventsFilter.getElement());
 
 const tripEvents = document.querySelector(`.trip-events`);
+const tripInfo = document.querySelector(`.trip-info`);
+const info = new Info(eventsArray);
 const sort = new Sort(sortArr);
-render(tripEvents, sort.getElement());
-
-tripEvents.insertAdjacentHTML(`beforeend`, renderDaysList());
+const daysList = new DaysList();
 
 const countTotalPrice = (events) => {
   let price = 0;
@@ -41,7 +37,9 @@ const countTotalPrice = (events) => {
   return price;
 };
 
-document.querySelector(`.trip-info__cost-value`).innerHTML = countTotalPrice(eventsArray);
+const showTotalPrice = () => {
+  document.querySelector(`.trip-info__cost-value`).innerHTML = countTotalPrice(eventsArray);
+};
 
 const renderAllEvents = () => {
   const tripDays = document.querySelector(`.trip-days`);
@@ -59,7 +57,6 @@ const renderAllEvents = () => {
       day = eventDay;
       month = eventMonth;
     }
-
 
     const editEvent = new EditEvent(event);
     const editEventElement = editEvent.getElement();
@@ -104,4 +101,18 @@ const renderAllEvents = () => {
   });
 };
 
-renderAllEvents();
+const renderMessage = () => {
+  const messageText = `Click New Event to create your first point`;
+  const messageElem = new Message(messageText).getElement();
+  render(tripEvents, messageElem);
+};
+
+if (eventsArray.length) {
+  render(tripInfo, info.getElement(), `afterbegin`);
+  render(tripEvents, sort.getElement());
+  render(tripEvents, daysList.getElement());
+  showTotalPrice();
+  renderAllEvents();
+} else {
+  renderMessage();
+}

@@ -1,8 +1,9 @@
 import {createElement} from '../utils';
 
-class DaysList {
-  constructor() {
+class Message {
+  constructor(text) {
     this._elem = null;
+    this._text = text;
   }
 
   getElement() {
@@ -21,9 +22,9 @@ class DaysList {
 
   getTemplate() {
     return `
-      <ul class="trip-days"></ul>
+      <p class="trip-events__msg">${this._text}</p>
     `;
   }
 }
 
-export default DaysList;
+export default Message;
