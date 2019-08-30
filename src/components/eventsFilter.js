@@ -1,23 +1,9 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstractComponent';
 
-class EventsFilter {
+class EventsFilter extends AbstractComponent {
   constructor(filtersArr) {
-    this._elem = null;
+    super();
     this._filtersArr = filtersArr;
-  }
-
-  getElement() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-
-    return this._elem;
-  }
-
-  removeElement() {
-    if (this._elem) {
-      this._elem = null;
-    }
   }
 
   getTemplate() {

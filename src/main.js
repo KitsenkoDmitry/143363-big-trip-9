@@ -1,4 +1,4 @@
-import {render} from './utils';
+import {render, Position} from './utils';
 import Info from "./components/info";
 import Controls from "./components/controls";
 import EventsFilter from "./components/eventsFilter";
@@ -108,7 +108,7 @@ const renderMessage = () => {
 };
 
 if (eventsArray.length) {
-  render(tripInfo, info.getElement(), `afterbegin`);
+  render(tripInfo, info.getElement(), Position.AFTERBEGIN);
   render(tripEvents, sort.getElement());
   render(tripEvents, daysList.getElement());
   showTotalPrice();

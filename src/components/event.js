@@ -1,27 +1,13 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstractComponent';
 
-class Event {
+class Event extends AbstractComponent {
   constructor({type, title, date, price, offers}) {
-    this._elem = null;
+    super();
     this._type = type;
     this._title = title;
     this._date = date;
     this._price = price;
     this._offers = offers;
-  }
-
-  getElement() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-
-    return this._elem;
-  }
-
-  removeElement() {
-    if (this._elem) {
-      this._elem = null;
-    }
   }
 
   getTemplate() {
