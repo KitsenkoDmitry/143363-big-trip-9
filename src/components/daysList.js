@@ -1,22 +1,8 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstractComponent';
 
-class DaysList {
+class DaysList extends AbstractComponent {
   constructor() {
-    this._elem = null;
-  }
-
-  getElement() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-
-    return this._elem;
-  }
-
-  removeElement() {
-    if (this._elem) {
-      this._elem = null;
-    }
+    super();
   }
 
   getTemplate() {

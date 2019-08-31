@@ -1,29 +1,15 @@
-import {createElement} from '../utils';
+import AbstractComponent from './abstractComponent';
 
-class EditEvent {
-  constructor({type, date, city, photos, description, price, offers}) {
-    this._elem = null;
-    this._type = type;
-    this._date = new Date(date);
-    this._city = city;
-    this._photos = photos;
-    this._description = description;
-    this._price = price;
-    this._offers = offers;
-  }
-
-  getElement() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-
-    return this._elem;
-  }
-
-  removeElement() {
-    if (this._elem) {
-      this._elem = null;
-    }
+class EditEvent extends AbstractComponent {
+  constructor(data) {
+    super();
+    this._type = data.type;
+    this._date = new Date(data.date);
+    this._city = data.city;
+    this._photos = data.photos;
+    this._description = data.description;
+    this._price = data.price;
+    this._offers = data.offers;
   }
 
   getTemplate() {

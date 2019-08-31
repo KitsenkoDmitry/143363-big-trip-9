@@ -1,23 +1,9 @@
-import {createElement} from '../utils';
+import AbstractComponent from "./abstractComponent";
 
-class Sort {
+class Sort extends AbstractComponent {
   constructor(sortArr) {
-    this._elem = null;
+    super();
     this._sortArr = sortArr;
-  }
-
-  getElement() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-
-    return this._elem;
-  }
-
-  removeElement() {
-    if (this._elem) {
-      this._elem = null;
-    }
   }
 
   getTemplate() {
@@ -26,7 +12,7 @@ class Sort {
         <h2 class="visually-hidden">Trip events</h2>
 
         <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-          <span class="trip-sort__item  trip-sort__item--day">Day</span>
+          <span class="trip-sort__item trip-sort__item--day">Day</span>
 
           ${this._sortArr.map((item) => (`
             <div class="trip-sort__item trip-sort__item--${item.name}">

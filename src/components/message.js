@@ -1,23 +1,9 @@
-import {createElement} from '../utils';
+import AbstractComponent from "./abstractComponent";
 
-class Message {
+class Message extends AbstractComponent {
   constructor(text) {
-    this._elem = null;
+    super();
     this._text = text;
-  }
-
-  getElement() {
-    if (!this._elem) {
-      this._elem = createElement(this.getTemplate());
-    }
-
-    return this._elem;
-  }
-
-  removeElement() {
-    if (this._elem) {
-      this._elem = null;
-    }
   }
 
   getTemplate() {

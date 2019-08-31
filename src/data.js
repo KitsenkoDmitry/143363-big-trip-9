@@ -1,4 +1,4 @@
-const EVENTS_COUNT = 4;
+const EVENTS_COUNT = 10;
 const MINUTES_FACTOR = 1000 * 60 * 60;
 /**
  * Исходные данные
