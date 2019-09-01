@@ -17,7 +17,8 @@ class Sort extends AbstractComponent {
           ${this._sortArr.map((item) => (`
             <div class="trip-sort__item trip-sort__item--${item.name}">
               <input id="sort-${item.name}" class="trip-sort__input visually-hidden" type="radio" name="trip-sort" value="sort-${item.name}" ${item.checked ? `checked` : ``}>
-              <label class="trip-sort__btn" for="sort-${item.name}">
+              <label class="trip-sort__btn" for="sort-${item.name}"
+                data-sort-type="sort-${item.name}">
                 ${item.name}
                 ${item.name !== `event` ? `
                   <svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">

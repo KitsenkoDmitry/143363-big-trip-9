@@ -1,11 +1,12 @@
 import AbstractComponent from './abstractComponent';
 
 class Event extends AbstractComponent {
-  constructor({type, title, date, price, offers}) {
+  constructor({type, title, date, duration, price, offers}) {
     super();
     this._type = type;
     this._title = title;
     this._date = date;
+    this._duration = duration;
     this._price = price;
     this._offers = offers;
   }
@@ -27,11 +28,11 @@ class Event extends AbstractComponent {
               </time>
               &mdash;
               <time class="event__end-time"
-                datetime="${new Date(this._date + 1000 * 60 * 90)}">
-                ${new Date(this._date + 1000 * 60 * 90).getHours()}:
-                ${new Date(this._date + 1000 * 60 * 90).getMinutes()}</time>
+                datetime="${new Date(this._date + this._duration)}">
+                ${new Date(this._date + this._duration).getHours()}:
+                ${new Date(this._date + this._duration).getMinutes()}</time>
             </p>
-            <p class="event__duration">1H 30M</p>
+            <p class="event__duration">${Math.floor(this._duration / (1000 * 60 * 60))}H ${Math.floor((this._duration / (1000 * 60) % 60))}M</p>
           </div>
 
           <p class="event__price">
