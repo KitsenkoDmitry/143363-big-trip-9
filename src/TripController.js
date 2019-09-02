@@ -13,22 +13,50 @@ class TripController {
     this._container = container;
     this._events = events;
     this._tripInfo = document.querySelector(`.trip-info`);
+    this._sortElem = new Sort(sortArr).getElement();
+    this._daysListElem = new DaysList().getElement();
+    this._onSortClick = this._onSortClick.bind(this);
   }
 
   init() {
     const info = new Info(this._events);
-    const sort = new Sort(sortArr);
-    const daysList = new DaysList();
 
     if (this._events.length) {
       render(this._tripInfo, info.getElement(), Position.AFTERBEGIN);
-      render(this._container, sort.getElement());
-      render(this._container, daysList.getElement());
+      render(this._container, this._sortElem);
+      render(this._container, this._daysListElem);
       this._showTotalPrice();
-      this._renderAllEvents();
+      this._renderAllEvents(this._events);
+
+      this._sortElem.addEventListener(`click`, this._onSortClick);
     } else {
       this._renderMessage();
     }
+  }
+
+  _onSortClick(e) {
+    if (e.target.className !== `trip-sort__btn`) {
+      return;
+    }
+    this._daysListElem.innerHTML = ``;
+
+    switch (e.target.dataset.sortType) {
+      case `sort-event`: {
+        this._renderAllEvents(this._events);
+        break;
+      }
+      case `sort-time`: {
+        const sortedByTime = this._events.slice().sort((a, b) => (b.duration - a.duration));
+        this._renderAllEvents(sortedByTime);
+        break;
+      }
+      case `sort-price`: {
+        const sortedByPrice = this._events.slice().sort((a, b) => (b.price - a.price));
+        this._renderAllEvents(sortedByPrice);
+        break;
+      }
+    }
+
   }
 
   _renderMessage() {
@@ -37,18 +65,17 @@ class TripController {
     render(this._container, messageElem);
   }
 
-  _renderAllEvents() {
-    const tripDays = document.querySelector(`.trip-days`);
+  _renderAllEvents(events) {
     let day = null;
     let month = null;
     let eventsList = null;
 
-    this._events.forEach((event, index) => {
+    events.forEach((event, index) => {
       const eventDay = new Date(event.date).getDate();
       const eventMonth = new Date(event.date).getMonth();
       if (eventDay !== day || eventMonth !== month) {
         const dayInstance = new Day(event, index + 1);
-        render(tripDays, dayInstance.getElement());
+        render(this._daysListElem, dayInstance.getElement());
         eventsList = Array.from(document.querySelectorAll(`.trip-events__list`));
         day = eventDay;
         month = eventMonth;

@@ -1,5 +1,6 @@
 const EVENTS_COUNT = 10;
-const MINUTES_FACTOR = 1000 * 60 * 60;
+const HOUR_FACTOR = 1000 * 60 * 60;
+const MINUT_FACTOR = 1000 * 60;
 /**
  * Исходные данные
  */
@@ -22,7 +23,8 @@ const getTripPoint = () => ({
   photos: new Array(getRandomInt(6) + 1).fill(`${dataObj.photo}?random=${getRandomInt(10)}`),
   description: dataObj.description.split(`. `).sort(sortCb)
     .slice(dataObj.description.length - Math.floor(Math.random() * 3) - 1).join(`. `),
-  date: dataObj.date + getRandomInt(31) * MINUTES_FACTOR * 24 + getRandomInt(24) * MINUTES_FACTOR,
+  date: dataObj.date + addRandomTime(),
+  duration: HOUR_FACTOR * (getRandomInt(6) + 1) + MINUT_FACTOR * getRandomInt(59),
   price: getRandomPrice(dataObj.price),
   offers: dataObj.offers.map((item) => ({
     title: item,
@@ -97,6 +99,10 @@ function getRandomBool() {
 
 function getRandomOffersPrice() {
   return Math.floor(Math.random() * 8 + 1) * 5;
+}
+
+function addRandomTime() {
+  return getRandomInt(31) * HOUR_FACTOR * 24 + getRandomInt(24) * HOUR_FACTOR;
 }
 
 function sortCb() {
