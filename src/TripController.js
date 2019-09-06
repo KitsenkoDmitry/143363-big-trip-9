@@ -5,8 +5,7 @@ import {sortArr} from "./data";
 import {render, Position} from "./utils";
 import Message from "./components/message";
 import Day from "./components/day";
-import EditEvent from "./components/editEvent";
-import Event from "./components/event";
+import PointController from "./PointController";
 
 class TripController {
   constructor(container, events) {
@@ -26,7 +25,7 @@ class TripController {
       render(this._container, this._sortElem);
       render(this._container, this._daysListElem);
       this._showTotalPrice();
-      this._renderAllEvents(this._events);
+      this._renderAllDays(this._events);
 
       this._sortElem.addEventListener(`click`, this._onSortClick);
     } else {
@@ -42,17 +41,17 @@ class TripController {
 
     switch (e.target.dataset.sortType) {
       case `sort-event`: {
-        this._renderAllEvents(this._events);
+        this._renderAllDays(this._events);
         break;
       }
       case `sort-time`: {
         const sortedByTime = this._events.slice().sort((a, b) => (b.duration - a.duration));
-        this._renderAllEvents(sortedByTime);
+        this._renderAllDays(sortedByTime);
         break;
       }
       case `sort-price`: {
         const sortedByPrice = this._events.slice().sort((a, b) => (b.price - a.price));
-        this._renderAllEvents(sortedByPrice);
+        this._renderAllDays(sortedByPrice);
         break;
       }
     }
@@ -65,63 +64,43 @@ class TripController {
     render(this._container, messageElem);
   }
 
-  _renderAllEvents(events) {
+  /**
+   * Создает объект даты - количество событий в дате
+   *
+   * @param {Object} events Объект с данными
+   * @return {Object}
+   */
+  _getTripDaysObj(events) {
     let day = null;
     let month = null;
-    let eventsList = null;
+    const tripDays = {};
 
-    events.forEach((event, index) => {
+    events.forEach((event) => {
       const eventDay = new Date(event.date).getDate();
       const eventMonth = new Date(event.date).getMonth();
+
       if (eventDay !== day || eventMonth !== month) {
-        const dayInstance = new Day(event, index + 1);
-        render(this._daysListElem, dayInstance.getElement());
-        eventsList = Array.from(document.querySelectorAll(`.trip-events__list`));
+        tripDays[`${eventDay}:${eventMonth}`] = 1;
         day = eventDay;
         month = eventMonth;
+      } else {
+        tripDays[`${eventDay}:${eventMonth}`] += 1;
       }
-
-      const editEvent = new EditEvent(event);
-      const editEventElement = editEvent.getElement();
-      const eventContainer = eventsList[eventsList.length - 1];
-      const eventInstance = new Event(event);
-      const eventElement = eventInstance.getElement();
-      render(eventContainer, eventElement);
-
-      const onEscKeyDown = (e) => {
-        if (e.keyCode === 27) {
-          eventContainer.replaceChild(eventElement, editEventElement);
-          document.removeEventListener(`keydown`, onEscKeyDown);
-        }
-      };
-
-      eventElement.querySelector(`.event__rollup-btn`)
-        .addEventListener(`click`, () => {
-          eventContainer.replaceChild(editEventElement, eventElement);
-          document.addEventListener(`keydown`, onEscKeyDown);
-        });
-
-      Array.from(editEventElement.querySelectorAll(`input[type="text"]`)).forEach((input) => {
-        input.addEventListener(`focus`, () => {
-          document.removeEventListener(`keydown`, onEscKeyDown);
-        });
-
-        input.addEventListener(`blur`, () => {
-          document.addEventListener(`keydown`, onEscKeyDown);
-        });
-      });
-
-      editEventElement.querySelector(`form`)
-        .addEventListener(`submit`, (e) => {
-          e.preventDefault();
-          eventContainer.replaceChild(eventElement, editEventElement);
-        });
-
-      editEventElement.querySelector(`.event__rollup-btn`)
-        .addEventListener(`click`, () => {
-          eventContainer.replaceChild(eventElement, editEventElement);
-        });
     });
+
+    return tripDays;
+  }
+
+  _renderAllDays(events) {
+    const tripDaysObj = this._getTripDaysObj(events);
+
+    Object.keys(tripDaysObj).forEach((key, index) => {
+      const dayInstance = new Day(event, index + 1, tripDaysObj[key]);
+      render(this._daysListElem, dayInstance.getElement());
+
+    });
+
+    // console.log(tripDays);
   }
 
   _showTotalPrice() {
