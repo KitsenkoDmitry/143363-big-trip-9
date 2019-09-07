@@ -2,11 +2,10 @@ import {getMonthName} from '../utils';
 import AbstractComponent from './abstractComponent';
 
 class Day extends AbstractComponent {
-  constructor(date, counter, eventsQuantity) {
+  constructor({date}, counter) {
     super();
     this._date = new Date(date);
     this._counter = counter;
-    this._eventsQuantity = eventsQuantity;
   }
 
   getTemplate() {
@@ -20,9 +19,7 @@ class Day extends AbstractComponent {
           </time>
         </div >
 
-        <ul class="trip-events__list">
-          ${new Array(this._eventsQuantity).fill(``).map(() => `<li class="trip-events__item"></li>`).join(``)}
-        </ul>
+        <ul class="trip-events__list"></ul>
       </li >
     `;
   }
