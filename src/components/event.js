@@ -1,7 +1,7 @@
 import AbstractComponent from './abstractComponent';
 
 class Event extends AbstractComponent {
-  constructor({ type, city, date, duration, price, offers }) {
+  constructor({type, city, date, duration, price, offers}) {
     super();
     this._type = type;
     this._city = city;
