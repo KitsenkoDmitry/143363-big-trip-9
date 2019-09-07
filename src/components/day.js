@@ -1,10 +1,11 @@
-import {getMonthName} from '../utils';
+
 import AbstractComponent from './abstractComponent';
+import moment from "moment";
 
 class Day extends AbstractComponent {
   constructor({date}, counter) {
     super();
-    this._date = new Date(date);
+    this._date = date;
     this._counter = counter;
   }
 
@@ -14,8 +15,7 @@ class Day extends AbstractComponent {
         <div class="day__info">
           <span class="day__counter">${this._counter}</span>
           <time class="day__date" datetime="2019-03-18">
-            ${getMonthName(this._date)}
-            ${this._date.getDate()}
+            ${moment(this._date).format(`DD MMM`)}
           </time>
         </div >
 
