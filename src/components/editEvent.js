@@ -98,7 +98,7 @@ class EditEvent extends AbstractComponent {
 
             <div class="event__field-group  event__field-group--destination">
               <label class="event__label  event__type-output" for="event-destination-1">
-                Sightseeing at
+                ${this._type.charAt(0).toUpperCase() + this._type.slice(1)} ${this._type === `check-in` || this._type === `sightseeing` || this._type === `restaurant` ? `at` : `to`}
               </label>
               <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${this._city}" list="destination-list-1">
               <datalist id="destination-list-1">
@@ -151,7 +151,7 @@ class EditEvent extends AbstractComponent {
               <div class="event__available-offers">
                 ${this._offers.map((offer, index) => `
                   <div class="event__offer-selector">
-                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-luggage" ${offer.checked ? `checked` : ``}>
+                    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-${offer.type}" ${offer.checked ? `checked` : ``}>
                     <label class="event__offer-label" for="event-offer-${index}">
                       <span class="event__offer-title">${offer.title}</span>
                       &plus;

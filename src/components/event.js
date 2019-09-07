@@ -1,10 +1,10 @@
 import AbstractComponent from './abstractComponent';
 
 class Event extends AbstractComponent {
-  constructor({type, title, date, duration, price, offers}) {
+  constructor({ type, city, date, duration, price, offers }) {
     super();
     this._type = type;
-    this._title = title;
+    this._city = city;
     this._date = date;
     this._duration = duration;
     this._price = price;
@@ -18,7 +18,7 @@ class Event extends AbstractComponent {
           <div class="event__type">
             <img class="event__type-icon" width="42" height="42" src="img/icons/${this._type}.png" alt="${this._type} icon">
           </div>
-          <h3 class="event__title">${this._type} to ${this._title}</h3>
+          <h3 class="event__title">${this._type.charAt(0).toUpperCase() + this._type.slice(1)} ${this._type === `check-in` || this._type === `sightseeing` || this._type === `restaurant` ? `at` : `to`} ${this._city}</h3>
 
           <div class="event__schedule">
             <p class="event__time">
