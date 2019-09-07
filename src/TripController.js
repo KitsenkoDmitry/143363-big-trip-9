@@ -5,8 +5,8 @@ import {sortArr} from "./data";
 import {render, Position} from "./utils";
 import Message from "./components/message";
 import Day from "./components/day";
-import EditEvent from "./components/editEvent";
-import Event from "./components/event";
+import PointController from "./PointController";
+
 
 class TripController {
   constructor(container, events) {
@@ -16,6 +16,10 @@ class TripController {
     this._sortElem = new Sort(sortArr).getElement();
     this._daysListElem = new DaysList().getElement();
     this._onSortClick = this._onSortClick.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onChangeView = this._onChangeView.bind(this);
+
+    this._subscriptions = [];
   }
 
   init() {
@@ -32,6 +36,16 @@ class TripController {
     } else {
       this._renderMessage();
     }
+  }
+
+  _onChangeView() {
+    this._subscriptions.forEach((subscription) => subscription());
+  }
+
+  _onDataChange(newData, oldData) {
+    this._events[this._events.findIndex((event) => event === oldData)] = newData;
+    this._daysListElem.innerHTML = ``;
+    this._renderAllEvents(this._events);
   }
 
   _onSortClick(e) {
@@ -56,7 +70,6 @@ class TripController {
         break;
       }
     }
-
   }
 
   _renderMessage() {
@@ -80,47 +93,9 @@ class TripController {
         day = eventDay;
         month = eventMonth;
       }
-
-      const editEvent = new EditEvent(event);
-      const editEventElement = editEvent.getElement();
       const eventContainer = eventsList[eventsList.length - 1];
-      const eventInstance = new Event(event);
-      const eventElement = eventInstance.getElement();
-      render(eventContainer, eventElement);
-
-      const onEscKeyDown = (e) => {
-        if (e.keyCode === 27) {
-          eventContainer.replaceChild(eventElement, editEventElement);
-          document.removeEventListener(`keydown`, onEscKeyDown);
-        }
-      };
-
-      eventElement.querySelector(`.event__rollup-btn`)
-        .addEventListener(`click`, () => {
-          eventContainer.replaceChild(editEventElement, eventElement);
-          document.addEventListener(`keydown`, onEscKeyDown);
-        });
-
-      Array.from(editEventElement.querySelectorAll(`input[type="text"]`)).forEach((input) => {
-        input.addEventListener(`focus`, () => {
-          document.removeEventListener(`keydown`, onEscKeyDown);
-        });
-
-        input.addEventListener(`blur`, () => {
-          document.addEventListener(`keydown`, onEscKeyDown);
-        });
-      });
-
-      editEventElement.querySelector(`form`)
-        .addEventListener(`submit`, (e) => {
-          e.preventDefault();
-          eventContainer.replaceChild(eventElement, editEventElement);
-        });
-
-      editEventElement.querySelector(`.event__rollup-btn`)
-        .addEventListener(`click`, () => {
-          eventContainer.replaceChild(eventElement, editEventElement);
-        });
+      const pointerController = new PointController(eventContainer, event, this._onDataChange, this._onChangeView);
+      this._subscriptions.push(pointerController.setDefaultView);
     });
   }
 
