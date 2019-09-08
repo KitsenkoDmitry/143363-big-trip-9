@@ -1,4 +1,5 @@
 import AbstractComponent from './abstractComponent';
+import moment from "moment";
 
 class Event extends AbstractComponent {
   constructor({type, city, date, duration, price, offers}) {
@@ -7,6 +8,7 @@ class Event extends AbstractComponent {
     this._city = city;
     this._date = date;
     this._duration = duration;
+    this._endDate = date + duration;
     this._price = price;
     this._offers = offers;
   }
@@ -23,16 +25,15 @@ class Event extends AbstractComponent {
           <div class="event__schedule">
             <p class="event__time">
               <time class="event__start-time"
-                datetime="${new Date(this._date).toISOString()}">
-                ${new Date(this._date).getHours()}:${new Date(this._date).getMinutes()}
+                datetime="${moment(this._date)}">
+                ${moment(this._date).format(`HH:mm`)}
               </time>
               &mdash;
               <time class="event__end-time"
-                datetime="${new Date(this._date + this._duration)}">
-                ${new Date(this._date + this._duration).getHours()}:
-                ${new Date(this._date + this._duration).getMinutes()}</time>
+                datetime="${moment(this._endDate)}">
+                ${moment(this._endDate).format(`HH:mm`)}</time>
             </p>
-            <p class="event__duration">${Math.floor(this._duration / (1000 * 60 * 60))}H ${Math.floor((this._duration / (1000 * 60) % 60))}M</p>
+            <p class="event__duration">${Math.floor(this._duration / (1000 * 60 * 60) % 24)}H ${Math.floor((this._duration / (1000 * 60) % 60))}M</p>
           </div>
 
           <p class="event__price">

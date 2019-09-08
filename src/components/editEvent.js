@@ -5,6 +5,7 @@ class EditEvent extends AbstractComponent {
     super();
     this._type = data.type;
     this._date = new Date(data.date);
+    this._endDate = new Date(data.date + data.duration);
     this._city = data.city;
     this._photos = data.photos;
     this._description = data.description;
@@ -112,12 +113,12 @@ class EditEvent extends AbstractComponent {
               <label class="visually-hidden" for="event-start-time-1">
                 From
               </label>
-              <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${this._date.getDate()}/${this._date.getMonth() + 1}/${this._date.getFullYear().toString().substr(2)} ${this._date.getHours()}:${this._date.getMinutes()}">
+              <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="">
               &mdash;
               <label class="visually-hidden" for="event-end-time-1">
                 To
               </label>
-              <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${this._date.getDate()}/${this._date.getMonth() + 1}/${this._date.getFullYear().toString().substr(2)} ${new Date(this._date.getTime() + 1000 * 60 * 90).getHours()}:${new Date(this._date.getTime() + 1000 * 60 * 90).getMinutes()}">
+              <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="">
             </div>
 
             <div class="event__field-group  event__field-group--price">
