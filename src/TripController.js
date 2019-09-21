@@ -6,7 +6,6 @@ import {render, Position} from "./utils";
 import Message from "./components/message";
 import Day from "./components/day";
 import PointController from "./PointController";
-import NewEvent from "./components/newEvent";
 import AddEventController from "./AddEventController";
 
 

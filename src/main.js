@@ -1,10 +1,10 @@
-import {render, Position} from './utils';
+import {render} from './utils';
 import Controls from "./components/controls";
 import EventsFilter from "./components/eventsFilter";
 import Stats from "./components/stats";
 import {eventsArray, eventsFiltersArray, controlsArr} from "./data";
 import TripController from './TripController';
-import NewEvent from './components/newEvent';
+
 
 const tripControls = document.querySelector(`.trip-controls`);
 const controls = new Controls(controlsArr);
