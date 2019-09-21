@@ -6,6 +6,7 @@ import {render, Position} from "./utils";
 import Message from "./components/message";
 import Day from "./components/day";
 import PointController from "./PointController";
+import AddEventController from "./AddEventController";
 
 
 class TripController {
@@ -18,32 +19,68 @@ class TripController {
     this._onSortClick = this._onSortClick.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onChangeView = this._onChangeView.bind(this);
+    this._onAddNewEventBtnClick = this._onAddNewEventBtnClick.bind(this);
 
+    this._addingEvent = false;
     this._subscriptions = [];
+    this._addEventController = new AddEventController(this._container, this._onDataChange);
   }
 
   init() {
     const info = new Info(this._events);
+    this._addEventController.hideNewEventForm();
 
     if (this._events.length) {
       render(this._tripInfo, info.getElement(), Position.AFTERBEGIN);
       render(this._container, this._sortElem);
+
       render(this._container, this._daysListElem);
       this._showTotalPrice();
       this._renderAllEvents(this._events);
 
       this._sortElem.addEventListener(`click`, this._onSortClick);
+
+      document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, this._onAddNewEventBtnClick);
     } else {
       this._renderMessage();
     }
   }
+
+  hide() {
+    this._container.classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this._container.classList.remove(`visually-hidden`);
+  }
+
+  _onAddNewEventBtnClick() {
+    if (this._addingEvent) {
+      return;
+    }
+    this._addEventController.showNewEventForm();
+    this._addingEvent = true;
+  }
+
 
   _onChangeView() {
     this._subscriptions.forEach((subscription) => subscription());
   }
 
   _onDataChange(newData, oldData) {
-    this._events[this._events.findIndex((event) => event === oldData)] = newData;
+    const index = this._events.findIndex((event) => event === oldData);
+    if (oldData === null && newData === null) {
+      this._addingEvent = false;
+    } else if (newData === null) {
+      this._events = [...this._events.slice(0, index), ...this._events.slice(index + 1)];
+    } else if (oldData === null) {
+      this._events = [newData, ...this._events];
+      this._addEventController.hideNewEventForm();
+      this._addingEvent = false;
+    } else {
+      this._events[index] = newData;
+    }
+
     this._daysListElem.innerHTML = ``;
     this._renderAllEvents(this._events);
   }
