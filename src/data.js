@@ -1,4 +1,4 @@
-const EVENTS_COUNT = 10;
+const EVENTS_COUNT = 5;
 const HOUR_FACTOR = 1000 * 60 * 60;
 const MINUT_FACTOR = 1000 * 60;
 /**

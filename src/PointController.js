@@ -6,6 +6,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import 'flatpickr/dist/themes/material_blue.css';
 import moment from 'moment';
+import {destTypes} from './constants';
 
 class PointController {
   constructor(container, eventData, onDataChange, onChangeView) {
@@ -98,13 +99,16 @@ class PointController {
       .addEventListener(`click`, () => {
         this._eventContainer.replaceChild(eventElement, editEventElement);
       });
+
+    editEventElement.querySelector(`.event__reset-btn`).addEventListener(`click`, () => {
+      this._onDataChange(null, this._eventData);
+    });
   }
 
   _onTypeChange(e) {
     if (e.target.checked) {
       const type = e.target.value;
-      const postfix = type === `check-in` || type === `sightseeing` || type === `restaurant` ?
-        `at` : `to`;
+      const postfix = type === destTypes.CHECK || type === destTypes.REST || type === destTypes.SIGHT ? `at` : `to`;
       this._editEvent.getElement().querySelector(`.event__type-icon`).src = `img/icons/${type}.png`;
       this._editEvent.getElement().querySelector(`.event__type-output`).textContent = `${type.charAt(0).toUpperCase() + type.slice(1)} ${postfix}`;
 

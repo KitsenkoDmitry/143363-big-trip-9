@@ -1,10 +1,10 @@
-import {render} from './utils';
+import {render, Position} from './utils';
 import Controls from "./components/controls";
 import EventsFilter from "./components/eventsFilter";
 import Stats from "./components/stats";
 import {eventsArray, eventsFiltersArray, controlsArr} from "./data";
-
 import TripController from './TripController';
+import NewEvent from './components/newEvent';
 
 const tripControls = document.querySelector(`.trip-controls`);
 const controls = new Controls(controlsArr);
@@ -40,5 +40,4 @@ controls.getElement().addEventListener(`click`, (e) => {
     tripController.show();
     eventsFilter.getElement().classList.remove(`visually-hidden`);
   }
-
 });
