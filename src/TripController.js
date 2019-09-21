@@ -38,6 +38,14 @@ class TripController {
     }
   }
 
+  hide() {
+    this._container.classList.add(`visually-hidden`);
+  }
+
+  show() {
+    this._container.classList.remove(`visually-hidden`);
+  }
+
   _onChangeView() {
     this._subscriptions.forEach((subscription) => subscription());
   }
