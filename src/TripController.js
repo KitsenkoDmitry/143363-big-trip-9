@@ -60,7 +60,7 @@ class TripController {
   setEvents(events) {
     this._events = events;
     this._daysListElem.innerHTML = ``;
-    this._sort(this._sortMode);
+    this._renderAllSortedEvents(this._sortMode);
   }
 
   _onAddNewEventBtnClick() {
@@ -91,7 +91,7 @@ class TripController {
     }
 
     this._daysListElem.innerHTML = ``;
-    this._renderAllEvents(this._events);
+    this._renderAllSortedEvents();
   }
 
   _onSortClick(e) {
@@ -101,11 +101,11 @@ class TripController {
     this._daysListElem.innerHTML = ``;
     this._sortMode = e.target.dataset.sortType;
 
-    this._sort(this._sortMode);
+    this._renderAllSortedEvents(this._sortMode);
   }
 
-  _sort(sortMode) {
-    switch (sortMode) {
+  _renderAllSortedEvents() {
+    switch (this._sortMode) {
       case `sort-time`: {
         const sortedByTime = this._events.slice().sort((a, b) => (b.duration - a.duration));
         this._renderAllEvents(sortedByTime);
