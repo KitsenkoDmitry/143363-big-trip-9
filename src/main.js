@@ -4,6 +4,7 @@ import EventsFilter from "./components/eventsFilter";
 import Stats from "./components/stats";
 import {eventsArray, eventsFiltersArray, controlsArr} from "./data";
 import TripController from './TripController';
+import StatisticController from './StatisticController';
 
 
 const tripControls = document.querySelector(`.trip-controls`);
@@ -32,12 +33,16 @@ controls.getElement().addEventListener(`click`, (e) => {
   target.classList.add(`trip-tabs__btn--active`);
 
   if (target.href.includes(`stats`)) {
-    stats.getElement().classList.remove(`visually-hidden`);
+    stats.show();
     tripController.hide();
     eventsFilter.getElement().classList.add(`visually-hidden`);
   } else if (target.href.includes(`table`)) {
-    stats.getElement().classList.add(`visually-hidden`);
+    stats.hide();
     tripController.show();
     eventsFilter.getElement().classList.remove(`visually-hidden`);
   }
 });
+
+const statisticController = new StatisticController(stats, eventsArray);
+stats.show();
+tripController.hide();
