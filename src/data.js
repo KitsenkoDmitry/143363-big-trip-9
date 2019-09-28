@@ -58,7 +58,7 @@ const getTripPoint = () => ({
   offers: dataObj.offers
 });
 
-export const eventsArray = new Array(EVENTS_COUNT).fill(``).map(getTripPoint).sort((a, b) => {
+export const eventsMock = new Array(EVENTS_COUNT).fill(``).map(getTripPoint).sort((a, b) => {
   return a.date - b.date;
 });
 
@@ -130,7 +130,8 @@ function getRandomOffersPrice() {
 }
 
 function addRandomTime() {
-  return getRandomInt(31) * HOUR_FACTOR * 24 + getRandomInt(24) * HOUR_FACTOR;
+  const multiplier = getRandomBool() ? 1 : -1;
+  return (getRandomInt(31) * HOUR_FACTOR * 24 + getRandomInt(24) * HOUR_FACTOR) * multiplier;
 }
 
 function sortCb() {
