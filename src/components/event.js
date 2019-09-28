@@ -40,14 +40,17 @@ class Event extends AbstractComponent {
             &euro;&nbsp;<span class="event__price-value">${this._price}</span>
           </p>
 
-          <h4 class="visually-hidden">Offers:</h4>
-          <ul class="event__selected-offers">
-            ${this._offers.map((offer) => (offer.checked ? `<li class="event__offer">
-              <span class="event__offer-title">${offer.title}</span>
-                &plus;
-                &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-            </li>` : ``)).join(``)}
-          </ul>
+          ${this._offers.length ? `
+            <h4 class="visually-hidden">Offers:</h4>
+              <ul class="event__selected-offers">
+                ${this._offers.map((offer) => (offer.checked ? `
+                <li class="event__offer">
+                  <span class="event__offer-title">${offer.title}</span>
+                    &plus;
+                    &euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
+              </li>` : ``)).slice(0, 3).join(``)}
+            </ul>` : ``}
+
 
           <button class="event__rollup-btn" type="button">
             <span class="visually-hidden">Open event</span>

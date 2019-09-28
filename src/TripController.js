@@ -20,13 +20,16 @@ class TripController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onChangeView = this._onChangeView.bind(this);
     this._onAddNewEventBtnClick = this._onAddNewEventBtnClick.bind(this);
+    this._sortMode = ``;
 
     this._addingEvent = false;
     this._subscriptions = [];
     this._addEventController = new AddEventController(this._container, this._onDataChange);
+
+    this._init();
   }
 
-  init() {
+  _init() {
     const info = new Info(this._events);
     this._addEventController.hideNewEventForm();
 
@@ -52,6 +55,12 @@ class TripController {
 
   show() {
     this._container.classList.remove(`visually-hidden`);
+  }
+
+  setEvents(events) {
+    this._events = events;
+    this._daysListElem.innerHTML = ``;
+    this._renderAllSortedEvents(this._sortMode);
   }
 
   _onAddNewEventBtnClick() {
@@ -82,7 +91,7 @@ class TripController {
     }
 
     this._daysListElem.innerHTML = ``;
-    this._renderAllEvents(this._events);
+    this._renderAllSortedEvents();
   }
 
   _onSortClick(e) {
@@ -90,12 +99,13 @@ class TripController {
       return;
     }
     this._daysListElem.innerHTML = ``;
+    this._sortMode = e.target.dataset.sortType;
 
-    switch (e.target.dataset.sortType) {
-      case `sort-event`: {
-        this._renderAllEvents(this._events);
-        break;
-      }
+    this._renderAllSortedEvents(this._sortMode);
+  }
+
+  _renderAllSortedEvents() {
+    switch (this._sortMode) {
       case `sort-time`: {
         const sortedByTime = this._events.slice().sort((a, b) => (b.duration - a.duration));
         this._renderAllEvents(sortedByTime);
@@ -104,6 +114,10 @@ class TripController {
       case `sort-price`: {
         const sortedByPrice = this._events.slice().sort((a, b) => (b.price - a.price));
         this._renderAllEvents(sortedByPrice);
+        break;
+      }
+      default: {
+        this._renderAllEvents(this._events);
         break;
       }
     }
