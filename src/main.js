@@ -44,5 +44,3 @@ controls.getElement().addEventListener(`click`, (e) => {
 });
 
 const statisticController = new StatisticController(stats, eventsArray);
-stats.show();
-tripController.hide();
